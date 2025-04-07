@@ -1,0 +1,56 @@
+
+/* Blue theme with smaller body font */
+.remark-slide-content {
+  background-color: #e6f2ff;
+  color: #003366;
+  font-family: 'Helvetica Neue', 'Segoe UI', sans-serif;
+  font-size: 18px; /* 작게 조정 */
+  padding: 1.5em 2em;
+}
+
+h1 {
+  color: #00509e;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 0.4em;
+}
+
+h2, h3 {
+  color: #004080;
+  font-weight: bold;
+}
+
+a {
+  color: #007acc;
+  text-decoration: underline;
+}
+
+.remark-code {
+  background-color: #f0f7ff;
+  color: #2c3e50;
+  font-size: 90%;
+  border-radius: 6px;
+  padding: 0.5em;
+}
+
+.remark-slide-number {
+  color: #888;
+}
+
+.remark-slide {
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 12px;
+}
+
+/* title slide appearance restored */
+.title-slide h1,
+.title-slide h2 {
+  color: #003366;
+  background: none;
+  text-shadow: none;
+}
+
+.title-slide .remark-slide-content {
+  text-align: center;
+  padding-top: 3em;
+}

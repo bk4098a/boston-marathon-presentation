@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>🏃 Boston Marathon 2023: Bib Number and Performance</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Byeolha Kim" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      body, .remark-slide-content {
+        font-family: 'Manrope', sans-serif;
+      }
+    </style>
+    <link rel="stylesheet" href="my-blue-theme-smaller-body.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# 🏃 Boston Marathon 2023: Bib Number and Performance
+]
+.author[
+### Byeolha Kim
+]
+
+---
+
+
+class: bg-marathon-logo, center, middle
+
+# 🏃 Boston Marathon 2023  
+## Bib Number and Performance  
+#### Byeolha Kim
+
+---
+
+background-image: url("logo.png")
+background-position: center
+background-size: 300px
+background-repeat: no-repeat
+
+# 🧭 Overview
+
+- **Bib number** might predict marathon finish time  
+- **Research Questions**:  
+  - Does lower bib number indicate faster finish time?  
+  - Are gender-based differences statistically significant?
+  
+  - 📂 **Data Source**:  
+  Boston Marathon 2023 results were sourced from the [Score Network](https://data.scorenetwork.org/running/boston_marathon_2023.html), which provides publicly available race data for research and analysis purposes.
+
+---
+
+# 📊 Data Cleaning &amp; Summary
+
+- Source: Official Boston Marathon 2023  
+- Observations after cleaning: ~26,500  
+- Cleaning Criteria:
+  - Removed missing values
+  - Filtered finish times between 1 and 10 hours
+
+
+```
+##    bib_number    finish_net_minutes    gender         
+##  Min.   :    1   Min.   :125.9      Length:26566      
+##  1st Qu.: 8261   1st Qu.:191.1      Class :character  
+##  Median :16124   Median :213.9      Mode  :character  
+##  Mean   :16054   Mean   :222.5                        
+##  3rd Qu.:23790   3rd Qu.:244.4                        
+##  Max.   :32194   Max.   :440.5
+```
+
+---
+
+# 🔍 Analysis 1: 📈 Bib Number vs Finish Time
+
+&lt;div style="font-size:75%"&gt;
+
+
+```
+## 
+## Call:
+## lm(formula = finish_net_minutes ~ bib_number, data = data)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -123.689  -14.468   -4.677    8.446  242.886 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 1.626e+02  3.372e-01   482.3   &lt;2e-16 ***
+## bib_number  3.731e-03  1.824e-05   204.5   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 27.26 on 26564 degrees of freedom
+## Multiple R-squared:  0.6117,	Adjusted R-squared:  0.6116 
+## F-statistic: 4.184e+04 on 1 and 26564 DF,  p-value: &lt; 2.2e-16
+```
+---
+
+![](Boston_Marathon_Final_Slides_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+**Interpretation:**  
+There is a strong positive relationship between bib number and finish time.  
+Higher bib numbers are associated with slower runners.
+
+---
+
+# 📌 OLS Results Summary
+
+- **Regression Equation:**  
+  **Finish Time** = 162.6 + 0.00373 × **Bib Number**
+
+- **Interpretation:**  
+  Every increase of 1,000 in bib numbers leads to an estimated increase of approximately **3.73 minutes** in finish time.
+
+- **Adjusted R²:** **0.6116** (Strong explanatory power)  
+- **Statistical Significance:** **p-value &lt; 2e-16** (Highly significant)
+
+---
+# 📊 Average Finish Time by Age Group
+
+![](Boston_Marathon_Final_Slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+&lt;div style="font-size:90%"&gt;
+
+## 📊 Interpretation: Finish Time by Age Group
+
+- The bar chart shows a clear upward trend in average finish time across age groups.
+- **Runners aged 18–39** had the fastest average time (~210–220 minutes).
+- As age increases, **average finish time rises gradually**, especially after **age 60**.
+- **Runners aged 75–79** take about **90 minutes longer** on average than those under 40.
+- The **80+ group** shows the slowest average, nearing 300 minutes (5 hours).
+- This pattern reflects natural physiological declines and highlights the importance of age-adjusted pacing and training.
+
+---
+
+# 📊 Analysis 2: 🎭 Gender Differences in Performance
+
+![](Boston_Marathon_Final_Slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+**Interpretation:**  
+The violin plot shows that **female runners** tend to finish **~23.5 minutes slower** than male runners.  
+This difference is clearly visible and consistent across the distribution.
+
+---
+
+## 📌 Statistical Analysis: Gender Differences
+
+&lt;div style="font-size:75%"&gt;
+
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  finish_net_minutes by gender
+## t = -45.481, df = 25539, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means between group M and group W is not equal to 0
+## 95 percent confidence interval:
+##  -24.50672 -22.48169
+## sample estimates:
+## mean in group M mean in group W 
+##        212.4160        235.9102
+```
+
+---
+| Gender | Mean Finish Time (mins) | SD (mins) | N      |
+|--------|-------------------------|-----------|--------|
+| **M**  | 212.42                  | 43.65     | 15,151 |
+| **W**  | 235.91                  | 40.14     | 11,415 |
+
+- **T-statistic:** -45.481  
+- **p-value:** &lt; 2.2e-16 (**Highly significant**)  
+- **95% CI of Mean Difference (M − W):** [-24.51, -22.48]
+---
+
+## 🔵 Bib Number vs Finish Time by Gender
+
+![](Boston_Marathon_Final_Slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+&lt;div style="font-size:90%"&gt;
+
+## 🔵 Interpretation: Bib Number vs Finish Time by Gender
+
+- This scatterplot shows how finish time increases as **bib number** increases — separated by gender.
+- Both male and female runners follow the **same positive trend**, but with **parallel separation**.
+- **Women (W)** tend to have consistently **longer finish times** than **men (M)** at the same bib number.
+- The bib assignment system seems consistent across genders — but actual performance differs.
+
+---
+## 🟢 Finish Time Density by Gender
+
+![](Boston_Marathon_Final_Slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+&lt;div style="font-size:90%"&gt;
+
+## 🟢 Interpretation: Finish Time Density by Gender
+
+- This density plot highlights the **distributional differences** in finish time by gender.
+- Male runners (dark blue) have a **left-shifted** distribution — they tend to finish faster overall.
+- Female runners (light blue) show a **wider and more right-skewed** distribution, with more runners finishing in 220–280 minutes.
+- The overlap between curves is relatively small, indicating a **clear difference in central tendency and spread**.
+
+---
+
+# ✅ Conclusion &amp; Implications
+
+- **Bib numbers are a strong predictor of finish time** — each 1,000-point increase is associated with a ~3.7-minute slower result.
+- **Gender-based performance gaps** are consistent across all visualizations:
+  - Women finish on average **~23.5 minutes slower** than men (t-test p &lt; 0.001).
+  - Density plots and violin plots confirm broader distributional differences.
+- **Age groups** show a steady increase in finish time — especially after 60, highlighting the impact of age on endurance performance.
+- Even within the same bib-number range, **gender and age differences remain**, showing bib alone is not the full story.
+
+
+## 📌 Implications
+
+- 🎯 **For race organizers**: Current bib assignment policy is statistically justified and effectively sorts runners by performance.
+- 🧠 **For runners**: Age- and gender-adjusted pacing may help set realistic goals.
+- 🔍 **For analysts**: Public marathon data can reveal nuanced performance dynamics across multiple demographics.
+
+---
+
+background-image: url("logo.png")
+background-position: center
+background-size: 300px
+background-repeat: no-repeat
+
+
+# 💭 Final Thought
+
+_If a number on your chest could predict your pace, how would you train differently?_
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

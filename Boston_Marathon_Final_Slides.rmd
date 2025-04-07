@@ -1,0 +1,237 @@
+---
+title: "🏃 Boston Marathon 2023: Bib Number and Performance"
+author: "Byeolha Kim"
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis", "default-fonts", "my-blue-theme-smaller-body.css"]
+    includes:
+      in_header: fonts.html
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+background-image: url("logo.png")
+background-position: center
+background-size: 300px
+background-repeat: no-repeat
+
+# 🏃 Boston Marathon 2023  
+## Bib Number and Performance  
+#### Byeolha Kim
+
+---
+
+# 🧭 Overview
+
+- **Bib number** might predict marathon finish time  
+- **Research Questions**:  
+  - Does lower bib number indicate faster finish time?  
+  - Are gender-based differences statistically significant?
+  
+  - 📂 **Data Source**:  
+  Boston Marathon 2023 results were sourced from the [Score Network](https://data.scorenetwork.org/running/boston_marathon_2023.html), which provides publicly available race data for research and analysis purposes.
+
+---
+
+# 📊 Data Cleaning & Summary
+
+- Source: Official Boston Marathon 2023  
+- Observations after cleaning: ~26,500  
+- Cleaning Criteria:
+  - Removed missing values
+  - Filtered finish times between 1 and 10 hours
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+
+data <- read.csv("boston_marathon_2023_cleaned.csv")
+
+data <- data %>%
+  mutate(
+    bib_number = as.numeric(as.character(bib_number)),
+    finish_net_minutes = as.numeric(as.character(finish_net_minutes))
+  ) %>%
+  filter(
+    !is.na(bib_number),
+    !is.na(finish_net_minutes),
+    finish_net_minutes > 60,
+    finish_net_minutes < 600
+  )
+
+summary(select(data, bib_number, finish_net_minutes, gender))
+```
+
+---
+
+# 🔍 Analysis 1: 📈 Bib Number vs Finish Time
+
+<div style="font-size:75%">
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+model <- lm(finish_net_minutes ~ bib_number, data = data)
+summary(model)
+```
+---
+
+```{r echo=FALSE, fig.height=5, fig.width=8, message=FALSE, warning=FALSE}
+model <- lm(finish_net_minutes ~ bib_number, data = data)
+
+ggplot(data, aes(x = bib_number, y = finish_net_minutes)) +
+  geom_point(alpha = 0.1, color = "#4682B4") +
+  geom_smooth(method = "lm", color = "#004080", se = FALSE, linewidth = 1) +
+  labs(title = "Bib Number vs Net Finish Time",
+       x = "Bib Number", y = "Finish Time (minutes)") +
+  theme_minimal()
+```
+
+**Interpretation:**  
+There is a strong positive relationship between bib number and finish time.  
+Higher bib numbers are associated with slower runners.
+
+---
+
+# 📌 OLS Results Summary
+
+- **Regression Equation:**  
+  **Finish Time** = 162.6 + 0.00373 × **Bib Number**
+
+- **Interpretation:**  
+  Every increase of 1,000 in bib numbers leads to an estimated increase of approximately **3.73 minutes** in finish time.
+
+- **Adjusted R²:** **0.6116** (Strong explanatory power)  
+- **Statistical Significance:** **p-value < 2e-16** (Highly significant)
+
+---
+# 📊 Average Finish Time by Age Group
+
+```{r echo=FALSE, fig.width=7, fig.height=4}
+ggplot(data, aes(x = age_group, y = finish_net_minutes)) +
+  stat_summary(fun = mean, geom = "bar", fill = "#66a3ff") +
+  labs(title = "Average Finish Time by Age Group",
+       x = "Age Group", y = "Finish Time (minutes)") +
+  theme_minimal()
+```
+
+<div style="font-size:90%">
+
+## 📊 Interpretation: Finish Time by Age Group
+
+- The bar chart shows a clear upward trend in average finish time across age groups.
+- **Runners aged 18–39** had the fastest average time (~210–220 minutes).
+- As age increases, **average finish time rises gradually**, especially after **age 60**.
+- **Runners aged 75–79** take about **90 minutes longer** on average than those under 40.
+- The **80+ group** shows the slowest average, nearing 300 minutes (5 hours).
+- This pattern reflects natural physiological declines and highlights the importance of age-adjusted pacing and training.
+
+---
+
+# 📊 Analysis 2: 🎭 Gender Differences in Performance
+
+```{r echo=FALSE, fig.width=7, fig.height=4}
+ggplot(data, aes(x = gender, y = finish_net_minutes, fill = gender)) +
+  geom_violin(trim = FALSE, alpha = 0.7) +
+  scale_fill_manual(values = c("M" = "#0072B2", "W" = "#56B4E9")) +
+  labs(title = "Finish Time Distribution by Gender",
+       x = "Gender", y = "Finish Time (minutes)") +
+  theme_minimal()
+```
+
+**Interpretation:**  
+The violin plot shows that **female runners** tend to finish **~23.5 minutes slower** than male runners.  
+This difference is clearly visible and consistent across the distribution.
+
+---
+
+## 📌 Statistical Analysis: Gender Differences
+
+<div style="font-size:75%">
+
+```{r echo=FALSE, fig.height=3, fig.width=5, message=FALSE, warning=FALSE, paged.print=TRUE}
+t.test(finish_net_minutes ~ gender, data = data)
+```
+
+---
+| Gender | Mean Finish Time (mins) | SD (mins) | N      |
+|--------|-------------------------|-----------|--------|
+| **M**  | 212.42                  | 43.65     | 15,151 |
+| **W**  | 235.91                  | 40.14     | 11,415 |
+
+- **T-statistic:** -45.481  
+- **p-value:** < 2.2e-16 (**Highly significant**)  
+- **95% CI of Mean Difference (M − W):** [-24.51, -22.48]
+---
+
+## 🔵 Bib Number vs Finish Time by Gender
+
+```{r echo=FALSE, fig.height=4, fig.width=7, message=FALSE, warning=FALSE}
+ggplot(data, aes(x = bib_number, y = finish_net_minutes, color = gender)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Bib Number vs Finish Time by Gender",
+       x = "Bib Number", y = "Finish Time (minutes)") +
+  theme_minimal()
+```
+
+<div style="font-size:90%">
+
+## 🔵 Interpretation: Bib Number vs Finish Time by Gender
+
+- This scatterplot shows how finish time increases as **bib number** increases — separated by gender.
+- Both male and female runners follow the **same positive trend**, but with **parallel separation**.
+- **Women (W)** tend to have consistently **longer finish times** than **men (M)** at the same bib number.
+- The bib assignment system seems consistent across genders — but actual performance differs.
+
+---
+## 🟢 Finish Time Density by Gender
+
+```{r echo=FALSE, fig.width=7, fig.height=4}
+ggplot(data, aes(x = finish_net_minutes, fill = gender)) +
+  geom_density(alpha = 0.4) +
+  labs(title = "Finish Time Density by Gender",
+       x = "Finish Time (minutes)", y = "Density") +
+  scale_fill_manual(values = c("M" = "#0072B2", "W" = "#56B4E9")) +
+  theme_minimal()
+```
+
+<div style="font-size:90%">
+
+## 🟢 Interpretation: Finish Time Density by Gender
+
+- This density plot highlights the **distributional differences** in finish time by gender.
+- Male runners (dark blue) have a **left-shifted** distribution — they tend to finish faster overall.
+- Female runners (light blue) show a **wider and more right-skewed** distribution, with more runners finishing in 220–280 minutes.
+- The overlap between curves is relatively small, indicating a **clear difference in central tendency and spread**.
+
+---
+
+# ✅ Conclusion & Implications
+
+- **Bib numbers are a strong predictor of finish time** — each 1,000-point increase is associated with a ~3.7-minute slower result.
+- **Gender-based performance gaps** are consistent across all visualizations:
+  - Women finish on average **~23.5 minutes slower** than men (t-test p < 0.001).
+  - Density plots and violin plots confirm broader distributional differences.
+- **Age groups** show a steady increase in finish time — especially after 60, highlighting the impact of age on endurance performance.
+- Even within the same bib-number range, **gender and age differences remain**, showing bib alone is not the full story.
+
+
+## 📌 Implications
+
+- 🎯 **For race organizers**: Current bib assignment policy is statistically justified and effectively sorts runners by performance.
+- 🧠 **For runners**: Age- and gender-adjusted pacing may help set realistic goals.
+- 🔍 **For analysts**: Public marathon data can reveal nuanced performance dynamics across multiple demographics.
+
+---
+
+background-image: url("logo.png")
+background-position: center
+background-size: 300px
+background-repeat: no-repeat
+
+
+# 💭 Final Thought
+
+_If a number on your chest could predict your pace, how would you train differently?_

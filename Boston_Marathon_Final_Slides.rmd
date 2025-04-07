@@ -3,7 +3,8 @@ title: "🏃 Boston Marathon 2023: Bib Number and Performance"
 author: "Byeolha Kim"
 output:
   xaringan::moon_reader:
-    css: ["default", "metropolis", "default-fonts", "my-blue-theme-smaller-body.css"]
+    self_contained: true
+    css: ["default", "metropolis", "default-fonts", "my-blue-theme-final-v7.css"]
     includes:
       in_header: fonts.html
     lib_dir: libs
